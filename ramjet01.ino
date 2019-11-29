@@ -38,21 +38,21 @@ void setup() {
     errorCritical( "Failed to detect and initialize accelerometer/gyroscope." );
   }
   lsm6AccGyro.enableDefault();
-  writeSDFile( fileAccGyro, "; data begin" );
+  writeSDFile( fileAccGyro, "; data begin - ord:time:A:ax,ay,az:G:gx,gy,gz" );
 
   printStatus( "Initializing magnetometer..." );
   if( !lis3Magneto.init() ){
     errorCritical( "Failed to detect and initialize magnetometer." );
   }
   lis3Magneto.enableDefault();
-  writeSDFile( fileMagneto, "; data begin" );
+  writeSDFile( fileMagneto, "; data begin - ord:time:M:mx,my,mz" );
 
   printStatus( "Initializing barometer/altimeter/thermometer..." );
   if( !lpsBaroAlt.init() ){
     errorCritical( "Failed to detect and initialize barometer/altimeter/thermometer." );
   }
   lpsBaroAlt.enableDefault();
-  writeSDFile( fileBaroAlt, "; data begin" );
+  writeSDFile( fileBaroAlt, "; data begin - ord:time:P:pf:A:af:T:tf" );
 }
 
 void loop() {
