@@ -15,18 +15,15 @@ const String fileBaroAlt = "BAROALT.TXT";
 const int buffSize = 80;    // size of character buffers
 
 int runLoopCounter = 0;   // loops in current run
-    // loop delay in milliseconds, set to 1000 for testing, 100 for actual run
-const int runLoopDelay = 100;
+    // loop delay in milliseconds, set to 1000 for testing, 250 for actual run
+const int runLoopDelay = 250;
 
 char report[ buffSize ];    // serial status output buffer
 
 void setup() {
   Serial.begin( 9600 );
-  while( !Serial ){
-    ;   // wait for serial port to connect
-  }
-  
   Wire.begin();
+  delay( 10000 );   // 10 sec delay to allow for communications initialization time
 
   printStatus( "Initializing SD card..." );
   if( !SD.begin( chipSelectSD )){
@@ -64,7 +61,7 @@ void loop() {
   
   // process accelerometer/gyroscope data from LSM6
   lsm6AccGyro.read();
-  snprintf( report, sizeof(report), "%s:%d:A:%d,%d,%d:G:%d,%d,%d", strLoopCount, millis(),
+  snprintf( report, sizeof(report), "%s:%ld:A:%d,%d,%d:G:%d,%d,%d", strLoopCount, millis(),
     lsm6AccGyro.a.x, lsm6AccGyro.a.y, lsm6AccGyro.a.z,
     lsm6AccGyro.g.x, lsm6AccGyro.g.y, lsm6AccGyro.g.z );
   Serial.println( report );
@@ -72,7 +69,7 @@ void loop() {
   
   // process magnetometer data from LIS3MDL
   lis3Magneto.read();
-  snprintf( report, sizeof(report), "%s:%d:M:%d,%d,%d", strLoopCount, millis(),
+  snprintf( report, sizeof(report), "%s:%ld:M:%d,%d,%d", strLoopCount, millis(),
     lis3Magneto.m.x, lis3Magneto.m.y, lis3Magneto.m.z );
   Serial.println( report );
   writeSDFile( fileMagneto, report );
@@ -81,7 +78,7 @@ void loop() {
   float baPressure = lpsBaroAlt.readPressureMillibars();
   float baAltitude = lpsBaroAlt.pressureToAltitudeMeters( baPressure );
   float baTemperature = lpsBaroAlt.readTemperatureC();
-  snprintf( report, sizeof(report), "%s:%d:P:%d.%04d:A:%d.%04d:T:%d.%04d", strLoopCount, millis(),
+  snprintf( report, sizeof(report), "%s:%ld:P:%d.%04d:A:%d.%04d:T:%d.%04d", strLoopCount, millis(),
     int(baPressure), int(10000*(baPressure-int(baPressure))),
     int(baAltitude), int(10000*(baAltitude-int(baAltitude))),
     int(baTemperature), int(10000*(baTemperature-int(baTemperature))) );
